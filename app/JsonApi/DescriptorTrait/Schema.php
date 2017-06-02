@@ -16,7 +16,7 @@ class Schema extends EloquentSchema
      * @var array|null
      */
     protected $attributes = [
-        // 'trait_title'=>"Trait Title"
+        'trait_title'
     ];
 
     public function getRelationships($resource, $isPrimary, array $includeRelationships)
