@@ -17,7 +17,7 @@ class readiness_seed extends Seeder
         	
 			$faker = Faker::create();
         	foreach(factory(\App\Models\DescriptorTrait::class, 10)->make() as $item) {
-        		$u->traits()->save($item);	
+        		$u->descriptorTraits()->save($item);	
         	}
 
         	for($i=1; $i<=3; $i++) {
@@ -32,7 +32,7 @@ class readiness_seed extends Seeder
         	
 
         	$levels = $u->levels()->pluck('id');
-        	$traits = $u->traits()->pluck('id');
+        	$traits = $u->descriptorTraits()->pluck('id');
 
         	foreach(range(1,10) as $index){
         		$descriptor = new \App\Models\Descriptor([
