@@ -29,16 +29,13 @@ class readiness_seed extends Seeder
         	}
         	
 
-        	
-
-        	$levels = $u->levels()->pluck('id');
+        
         	$traits = $u->descriptorTraits()->pluck('id');
 
         	foreach(range(1,10) as $index){
         		$descriptor = new \App\Models\Descriptor([
                 	'descriptor_text' => $faker->text,
                 	'descriptor_as_question' => $faker->text,
-                	'level_id' => $faker->randomElement($levels->all()),
                 	'trait'=> $faker->randomElement($traits->all())
             	]);
         		$u->descriptors()->save($descriptor);

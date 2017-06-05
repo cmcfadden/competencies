@@ -10,9 +10,4 @@ class Level extends Model
     {
         return $this->belongsTo('App\Models\Competency', 'competency_id');
     }
-
-	public function descriptors()
-    {
-        return $this->hasMany('App\Models\Descriptor', 'level_id');
-    }
 }

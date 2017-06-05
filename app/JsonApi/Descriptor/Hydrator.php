@@ -16,7 +16,7 @@ class Hydrator extends EloquentHydrator
      * @var array
      */
     protected $relationships = [
-        'competency', 'level', 'descriptor_trait'
+        'competency','descriptor_trait'
     ];
 
 }

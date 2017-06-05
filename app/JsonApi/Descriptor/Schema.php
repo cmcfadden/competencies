@@ -28,11 +28,6 @@ class Schema extends EloquentSchema
                 self::SHOW_RELATED => true,
                 self::DATA => $resource->competency
             ],
-            'level' => [
-                self::SHOW_SELF => true,
-                self::SHOW_RELATED => true,
-                self::DATA => $resource->level
-            ],
             'descriptor_trait' => [
                 self::SHOW_SELF => true,
                 self::SHOW_RELATED => true,

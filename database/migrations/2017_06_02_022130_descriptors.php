@@ -17,8 +17,6 @@ class Descriptors extends Migration
             $table->increments('id');
             $table->integer('competency_id')->unsigned();
             $table->foreign("competency_id")->references('id')->on("competencies");
-            $table->integer('level_id')->unsigned();
-            $table->foreign("level_id")->references('id')->on("levels");
             $table->string("descriptor_text");
             $table->timestamps();
         });
