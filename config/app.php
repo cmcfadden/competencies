@@ -178,7 +178,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
 
-        'CloudCreativity\LaravelJsonApi\ServiceProvider'
+        'CloudCreativity\LaravelJsonApi\ServiceProvider',
+        Barryvdh\Cors\ServiceProvider::class
     ],
 
     /*

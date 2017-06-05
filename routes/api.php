@@ -18,7 +18,7 @@ use CloudCreativity\LaravelJsonApi\Routing\ApiGroup as Api;
 JsonApi::api('v1', 
 	['namespace' => 'Api',
     'prefix' => 'v1',
-    'as' => 'api-v1::'], 
+    'as' => 'api-v1::', 'middleware'=>['cors']], 
 	function ($api, $router) {
     $api->resource('competency', ['only' => ['index', 'read'], 'has-many' => ['descriptor-traits'=>['only' => ['related', 'read']], 'levels'=>['only' => ['related', 'read']], 'descriptors'=>['only' => ['related', 'read']]]]);
     $api->resource('descriptor-trait', ['only' => ['index', 'read'], 'has-one' => ['competency'=>['only' => ['related', 'read']]]]);

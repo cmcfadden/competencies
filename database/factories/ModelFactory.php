@@ -17,7 +17,7 @@ $factory->define(App\Models\Competency::class, function (Faker\Generator $faker)
     static $increment = -1;
     $increment++;
     return [
-        'competency' => $faker->text,
+        'competency' => $faker->company,
         'description' => $faker->paragraph,
         'intro_animation_url' => $faker->url,
         'icon_url' => $faker->url,
