@@ -21,8 +21,8 @@ class Addreallabels extends Migration
 
         Schema::table('descriptors', function (Blueprint $table) {
             $table->string('descriptor_as_question');
-            $table->integer('trait')->unsigned();
-            $table->foreign("trait")->references('id')->on("descriptor_traits");
+            $table->integer('trait_id')->unsigned();
+            $table->foreign("trait_id")->references('id')->on("descriptor_traits");
         });
 
     }

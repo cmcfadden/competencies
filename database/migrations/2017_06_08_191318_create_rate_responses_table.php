@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTraits extends Migration
+class CreateRateResponsesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateTraits extends Migration
      */
     public function up()
     {
-        Schema::create('descriptor_traits', function (Blueprint $table) {
+        Schema::create('rate_responses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("trait_title");
-            $table->integer("competency_id")->unsigned();
-            $table->foreign("competency_id")->references('id')->on("competencies");
+            $table->string('umnDID');
+            $table->integer('userId');
+            $table->integer('competency_id');
+            $table->boolean('completed');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateTraits extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('descriptor_traits');
+        Schema::dropIfExists('rate_responses');
     }
 }

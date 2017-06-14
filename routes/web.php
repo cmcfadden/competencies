@@ -14,3 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('rate/capture', 'RateController@capture');
+
+Route::get('evaluate/getEvaluatorsForCompetency/{competency}', 'EvaluateController@getEvaluatorsForCompetency');
+
+Route::resource('rate', 'RateController');
+Route::resource('evaluate', 'EvaluateController');
+

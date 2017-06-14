@@ -21,4 +21,9 @@ class Competency extends Model
         return $this->hasMany('App\Models\Descriptor', "competency_id");
     }
 
+    public function rate_responses()
+    {
+        return $this->belongsToMany('App\Models\RateResponse')->withTimestamps();
+    }
+
 }

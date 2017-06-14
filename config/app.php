@@ -179,7 +179,8 @@ return [
 
 
         'CloudCreativity\LaravelJsonApi\ServiceProvider',
-        Barryvdh\Cors\ServiceProvider::class
+        Barryvdh\Cors\ServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class
     ],
 
     /*
@@ -228,7 +229,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'JsonApi' => 'CloudCreativity\LaravelJsonApi\Facade'
+        'JsonApi' => 'CloudCreativity\LaravelJsonApi\Facade',
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
 
     ],
 

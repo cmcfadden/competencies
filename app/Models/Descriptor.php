@@ -17,6 +17,6 @@ class Descriptor extends Model
     }
 
     public function descriptor_trait() {
-    	return $this->belongsTo('App\Models\DescriptorTrait', 'trait');
+    	return $this->belongsTo('App\Models\DescriptorTrait', 'trait_id');
     }
 }

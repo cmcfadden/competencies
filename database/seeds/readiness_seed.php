@@ -36,7 +36,7 @@ class readiness_seed extends Seeder
         		$descriptor = new \App\Models\Descriptor([
                 	'descriptor_text' => $faker->text,
                 	'descriptor_as_question' => $faker->text,
-                	'trait'=> $faker->randomElement($traits->all())
+                	'trait_id'=> $faker->randomElement($traits->all())
             	]);
         		$u->descriptors()->save($descriptor);
         	}
