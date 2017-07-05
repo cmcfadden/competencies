@@ -1,3 +1,7 @@
+@extends('base')
+
+
+@section('content')
 
 @foreach ($competency->descriptors as $descriptor)
 
@@ -15,3 +19,4 @@
 	</div>
 @endforeach
 
+@endsection

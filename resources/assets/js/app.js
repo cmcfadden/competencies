@@ -8,4 +8,7 @@
 require('./bootstrap');
 
 require('bootstrap-slider');
+
+require('datatables');
+
 import 'handlebars/dist/handlebars.min.js';

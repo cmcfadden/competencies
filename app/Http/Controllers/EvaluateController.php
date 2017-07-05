@@ -11,9 +11,16 @@ class EvaluateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if($request->ajax()) {
+            $evaluations = \App\Models\Evaluation::all();
+            $evaluations->load('competency');    
+            return response()->json($evaluations);
+        }
+        
+        return view('evaluate.list');
+        
     }
 
     /**

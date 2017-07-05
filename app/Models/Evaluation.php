@@ -8,7 +8,7 @@ class Evaluation extends Model
 {
 
 	protected $fillable = ['level', 'userId', 'competency_id'];
-    
+
 
     public function evaluation_entries() {
     	return $this->hasMany('App\Models\EvaluationEntry', "evaluation_id");

@@ -11,12 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resource('/', 'HomeController');
 
 
 Route::get('rate/capture', 'RateController@capture');
+Route::get('rate/prepare', 'RateController@prepare');
 
 Route::get('evaluate/getEvaluatorsForCompetency/{competency}', 'EvaluateController@getEvaluatorsForCompetency');
 
