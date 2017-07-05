@@ -13,11 +13,14 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('password_resets');
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('unity_id', 100)->unique();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->string('email', 100)->unique();
+            $table->string('auth_type')->default('shibboleth');
             $table->rememberToken();
             $table->timestamps();
         });
