@@ -11,14 +11,19 @@
 |
 */
 
+
+
 Route::resource('/', 'HomeController');
 
 
-Route::get('rate/capture', 'RateController@capture');
-Route::get('rate/prepare', 'RateController@prepare');
+Route::group(['middleware' => 'auth.shib'], function() {
+	Route::get('rate/capture', 'RateController@capture');
+	Route::get('rate/prepare', 'RateController@prepare');
 
-Route::get('evaluate/getEvaluatorsForCompetency/{competency}', 'EvaluateController@getEvaluatorsForCompetency');
+	Route::get('evaluate/getEvaluatorsForCompetency/{competency}', 'EvaluateController@getEvaluatorsForCompetency');
 
-Route::resource('rate', 'RateController');
-Route::resource('evaluate', 'EvaluateController');
+	Route::resource('rate', 'RateController');
+	Route::resource('evaluate', 'EvaluateController');
 
+
+});

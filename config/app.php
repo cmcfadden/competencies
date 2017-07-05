@@ -177,7 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-
+        Dfoxx\Shibboleth\ShibbolethServiceProvider::class,
         'CloudCreativity\LaravelJsonApi\ServiceProvider',
         Barryvdh\Cors\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class
