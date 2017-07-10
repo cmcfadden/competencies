@@ -135,9 +135,23 @@ class RateController extends Controller
             }
             
             $item->fill($content);
-            $item->save();
+            $item->response_type = $responseId;
+            $item->response_modality = 1;
+            $item->video_id = 1;
+            if($item->response_id) {
+                $item->save();
+            }
+            else {
+                $response->response_components()->save($item);
+            }
+            
         }
         return \Redirect::route('rate.edit', $response->id);
+    }
+
+
+    public function getDescriptorForCompetency(\App\Models\Competency $competency) {
+        return $competency->descriptors;
     }
 
     /**

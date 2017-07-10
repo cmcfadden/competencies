@@ -34,7 +34,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('rate/capture', 'RateController@capture');
 	Route::get('rate/{rate}/prepare', 'RateController@prepare');
 
-	Route::get('evaluate/getEvaluatorsForCompetency/{competency}', 'EvaluateController@getEvaluatorsForCompetency');
+    Route::get('evaluate/getEvaluatorsForCompetency/{competency}', 'EvaluateController@getEvaluatorsForCompetency');
+	Route::get('rate/getDescriptorForCompetency/{competency}', 'RateController@getDescriptorForCompetency');
 
 	Route::resource('rate', 'RateController');
 	Route::resource('evaluate', 'EvaluateController');
