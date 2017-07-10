@@ -24,17 +24,10 @@
 	@else
 	{{ Form::model($evaluation = new \App\Models\Evaluation, array('route' => 'evaluate.store', 'class'=>'form-horizontal')) }}
 	@endisset
-	
-		<div class="form-group">
-			{{ Form::label('userId', 'userId:', ['class'=>'col-sm-2 control-label']) }}
-			<div class="col-sm-3">
-				{{ Form::text('userId', null, ['class'=>'form-control']) }}
-			</div>
-		</div>
 		<div class="form-group">
 			{{ Form::label('competency_id', 'Competencies:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-4">
-				{{ Form::select('competency_id', $competencies, null, ['class' => 'form-control competencySelector']) }}
+				{{ Form::select('competency_id', $competencies, null, ['class' => 'form-control competencySelector', $evaluation->competency_id!=null?"disabled":null]) }}
 			</div>
 		</div>
 		

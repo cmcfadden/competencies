@@ -177,7 +177,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        Dfoxx\Shibboleth\ShibbolethServiceProvider::class,
+        StudentAffairsUwm\Shibboleth\ShibbolethServiceProvider::class,
+        StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
         'CloudCreativity\LaravelJsonApi\ServiceProvider',
         Barryvdh\Cors\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class

@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class RateResponse extends Model
 {
 	protected $guarded = ['id'];
-	protected $fillable = ['primaryCompetency', 'umnDID'];
+	protected $fillable = ['primaryCompetency'];
 
+    public function user() {
+        return $this->belongsTo("App\User", "user_id");
+    }
 
     public function response_components()
     {

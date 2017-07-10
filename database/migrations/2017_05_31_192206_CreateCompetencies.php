@@ -17,7 +17,11 @@ class CreateCompetencies extends Migration
             $table->increments('id');
             $table->string('competency');
             $table->text('description');
+            $table->integer('official_order');
+            $table->string('intro_animation_url');
+            $table->string('icon_url');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

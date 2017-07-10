@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Auth;
 
 class RateController extends Controller
 {
@@ -42,6 +42,23 @@ class RateController extends Controller
     }
 
     /**
+     * Show the form for creating a new prepare resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function prepare(\App\Models\RateResponse $rate)
+    {
+        if(!$rate->id) {
+            return \Redirect::action('HomeController@index');
+        }
+
+        $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
+        // $rate = new \App\Models\RateResponse;
+        return view('rate.translate', compact('competencies', 'rate'));
+    }
+
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -51,7 +68,7 @@ class RateController extends Controller
     {
         $response = new \App\Models\RateResponse;
         $response->fill($request->all());
-        $response->userId = 1;
+        $response->user()->associate(Auth::user());
         $response->completed = false;
         $response->save();
 
@@ -61,6 +78,7 @@ class RateController extends Controller
         
         foreach ($request->get('response_component') as $responseId => $content) {
             $item = new \App\Models\ResponseComponent;
+
             $item->fill($content);
             $item->response_type = $responseId;
             $item->response_modality = 1;
@@ -107,9 +125,7 @@ class RateController extends Controller
 
         $response = \App\Models\RateResponse::findOrFail($id);
         $response->fill($request->all());
-
         $response->competencies()->sync($request->get('competencies'));
-
         $response->save();
         foreach ($request->get('response_component') as $responseId => $content) {
             

@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use StudentAffairsUwm\Shibboleth\Entitlement;
+
 
 class User extends Authenticatable
 {
@@ -15,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-            'unity_id', 'name', 'email',
+             'name', 'email','first_name','last_name', 'umndid'
     ];
     /**
      * The attributes that should be hidden for arrays.
@@ -23,26 +25,19 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'remember_token',
     ];
-    
-    /**
-     * Get the name of the unique identifier for the user.
-     *
-     * @return string
-     */
-    public function getAuthIdentifierName()
+
+    public function entitlements()
     {
-        return 'unity_id';
+        return $this->belongsToMany(Entitlement::class);
     }
 
-    /**
-     * Get the unique identifier for the user.
-     *
-     * @return mixed
-     */
-    public function getAuthIdentifier()
-    {
-        return $this->unity_id;
+    public function rate_responses() {
+        return $this->belongsToMany(App\Models\RateResponse);
+    }
+
+    public function evaluations() {
+        return $this->belongsToMany(App\Models\Evaluation);
     }
 }

@@ -18,7 +18,11 @@ class Descriptors extends Migration
             $table->integer('competency_id')->unsigned();
             $table->foreign("competency_id")->references('id')->on("competencies");
             $table->string("descriptor_text");
+            $table->string('descriptor_as_question');
+            $table->integer('trait_id')->unsigned();
+            $table->foreign("trait_id")->references('id')->on("descriptor_traits");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

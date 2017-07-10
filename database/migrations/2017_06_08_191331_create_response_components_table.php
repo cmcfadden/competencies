@@ -19,6 +19,8 @@ class CreateResponseComponentsTable extends Migration
             $table->integer("response_modality");
             $table->text("response_text");
             $table->string("video_id");
+            $table->integer("descriptor_trait_id")->unsigned()->nullable();
+            $table->foreign("descriptor_trait_id")->references('id')->on("descriptor_traits");
             $table->integer("response_id")->unsigned();
             $table->foreign("response_id")->references('id')->on("rate_responses");
             $table->timestamps();

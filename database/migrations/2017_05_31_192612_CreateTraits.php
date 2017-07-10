@@ -19,6 +19,7 @@ class CreateTraits extends Migration
             $table->integer("competency_id")->unsigned();
             $table->foreign("competency_id")->references('id')->on("competencies");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

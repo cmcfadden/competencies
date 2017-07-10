@@ -2,7 +2,6 @@
 
 
 @section('content')
-
 @if ($flashContent)
 <div class="alert">
     {!! $flashContent !!}
@@ -12,6 +11,13 @@
 <div class="row">
 	<div class="col-sm-12">
 		What would you like to do?
+		@if (Auth::guest())
+    <a href="/emulated/login">Login</a>
+@else
+    <a href="/emulated/logout">
+        Logout {{ Auth::user()->name }}
+    </a>
+@endif
 	</div>
 </div>
 
@@ -30,7 +36,7 @@
 	</div>
 
 	<div class="col-sm-4">
-		<p><a href="{{ action('RateController@prepare') }}" class="btn btn-primary">Prepare for an Interview</a></p>
+		<p><a href="{{ action('RateController@prepare', 1) }}" class="btn btn-primary">Prepare for an Interview</a></p>
 		<p><a href="{{ action('RateController@index') }}">View Past Responses</a></p>
 		<p>Use your captured experiences and
 all of your skills in the core 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Auth;
+
 class EvaluateController extends Controller
 {
     /**
@@ -44,6 +46,7 @@ class EvaluateController extends Controller
     {
         $response = new \App\Models\Evaluation;
         $response->fill($request->all());
+        $response->user()->associate(Auth::user());
         $response->level = 1;
         $response->save();
 
@@ -54,7 +57,7 @@ class EvaluateController extends Controller
             $response->evaluation_entries()->save($evaluationEntry);
 
         }
-
+        return \Redirect::route('evaluate.edit', $response->id);
     }
 
     /**

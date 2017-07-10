@@ -1,14 +1,11 @@
-@extends('base')
-
-
-@section('content')
 
 @foreach ($competency->descriptors as $descriptor)
 
 	<div>
 
-{{ Form::text('evaluation_entries[' . $descriptor->id . ']', null, ['class'=>'form-control', 
+{{ Form::text('evaluation_entries[' . $descriptor->id . ']', null, ["disable",'class'=>'form-control', 
 	"data-provide"=>"slider",
+	"data-slider-enabled"=>"true", // toggle this once we have a finished status
 	"data-slider-ticks"=>"[1, 2, 3, 4, 5]",
 	"data-slider-ticks-labels"=>'["short", "medium", "long"]',
 	"data-slider-min"=>"1",
@@ -19,4 +16,3 @@
 	</div>
 @endforeach
 
-@endsection

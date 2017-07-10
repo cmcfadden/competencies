@@ -24,19 +24,13 @@
 	@else
 	{{ Form::model($rate = new \App\Models\RateResponse, array('route' => 'rate.store', 'class'=>'form-horizontal')) }}
 	@endisset
-		<div class="form-group">
-			{{ Form::label('umnDID', 'umnDID:', ['class'=>'col-sm-2 control-label']) }}
-			<div class="col-sm-10">
-				{{ Form::text('umnDID') }}
-			</div>
-		</div>
 		
-		<div class="form-group">
+		<!--<div class="form-group">
 			{{ Form::label('primaryCompetency', 'Competency:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-4">
 				{{ Form::select('primaryCompetency', $competencies, null, ['class' => 'form-control']) }}
 			</div>
-		</div>
+		</div>-->
 		<div class="form-group">
 			{{ Form::label('competencies[]', 'Competencies:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-4">

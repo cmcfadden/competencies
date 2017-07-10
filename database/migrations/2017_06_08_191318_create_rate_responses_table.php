@@ -15,10 +15,23 @@ class CreateRateResponsesTable extends Migration
     {
         Schema::create('rate_responses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('umnDID');
-            $table->integer('userId');
-            $table->integer('competency_id');
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('primaryCompetency')->nullable();
             $table->boolean('completed');
+            $table->timestamps();
+        });
+
+        Schema::create('competency_rate_response', function(Blueprint $table)
+        {
+            $table->integer('competency_id')->unsigned()->nullable();
+            $table->foreign('competency_id')->references('id')
+            ->on('competencies')->onDelete('cascade');
+
+            $table->integer('rate_response_id')->unsigned()->nullable();
+            $table->foreign('rate_response_id')->references('id')
+            ->on('rate_responses')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -30,6 +43,8 @@ class CreateRateResponsesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('competency_rate_response');
         Schema::dropIfExists('rate_responses');
+        
     }
 }

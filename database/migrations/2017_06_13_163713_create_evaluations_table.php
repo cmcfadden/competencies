@@ -15,7 +15,8 @@ class CreateEvaluationsTable extends Migration
     {
         Schema::create('evaluations', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('userId');
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('competency_id')->unsigned();
             $table->foreign("competency_id")->references('id')->on("competencies");
             $table->integer('level')->unsigned();
