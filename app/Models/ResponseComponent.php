@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ResponseComponent extends Model
 {
 
-	protected $fillable = ['response_type', 'response_text', 'descriptor_trait_id'];
+	protected $fillable = ['response_type', 'response_text', 'descriptor_id'];
 
     public function response()
     {
@@ -17,6 +17,6 @@ class ResponseComponent extends Model
 
     public function descriptor_trait()
     {
-        return $this->hasOne('App\Models\DescriptorTrait', 'descriptor_trait_id');
+        return $this->hasOne('App\Models\Descriptor', 'descriptor_id');
     }
 }
