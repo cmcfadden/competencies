@@ -125,7 +125,10 @@ class RateController extends Controller
 
         $response = \App\Models\RateResponse::findOrFail($id);
         $response->fill($request->all());
-        $response->competencies()->sync($request->get('competencies'));
+        if($request->get('competencies')) {
+            $response->competencies()->sync($request->get('competencies'));            
+        }
+
         $response->save();
         foreach ($request->get('response_component') as $responseId => $content) {
             
