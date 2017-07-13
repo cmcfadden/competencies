@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class RateResponse extends Model
 {
-	protected $guarded = ['id'];
-	protected $fillable = ['primaryCompetency'];
-
+    protected $guarded = ['id'];
+    protected $fillable = ['primaryCompetency', 'experience'];
     public function user() {
         return $this->belongsTo("App\User", "user_id");
     }
@@ -23,7 +22,7 @@ class RateResponse extends Model
      * @return a single eloquent object
      */
     public function filtered_response_component($componentTitle = null) {
-    	$filtered = $this->filtered_response_components($componentTitle);
+        $filtered = $this->filtered_response_components($componentTitle);
 
         if(!$filtered->isEmpty()) return $filtered->first();
 

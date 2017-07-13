@@ -34,10 +34,10 @@ class User extends Authenticatable
     }
 
     public function rate_responses() {
-        return $this->belongsToMany(App\Models\RateResponse);
+        return $this->hasMany('App\Models\RateResponse');
     }
 
     public function evaluations() {
-        return $this->belongsToMany(App\Models\Evaluation);
+        return $this->hasMany('App\Models\Evaluation');
     }
 }

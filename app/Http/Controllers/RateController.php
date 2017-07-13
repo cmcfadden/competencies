@@ -14,7 +14,7 @@ class RateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
     }
@@ -29,33 +29,6 @@ class RateController extends Controller
         dd("not yet");
     }
 
-    /**
-     * Show the form for creating a new capture resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function capture()
-    {
-        $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
-        // $rate = new \App\Models\RateResponse;
-        return view('rate.reflect', compact('competencies'));
-    }
-
-    /**
-     * Show the form for creating a new prepare resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function prepare(\App\Models\RateResponse $rate)
-    {
-        if(!$rate->id) {
-            return \Redirect::action('HomeController@index');
-        }
-
-        $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
-        // $rate = new \App\Models\RateResponse;
-        return view('rate.translate', compact('competencies', 'rate'));
-    }
 
 
     /**
@@ -66,19 +39,24 @@ class RateController extends Controller
      */
     public function store(Request $request)
     {
+        if($request->get("rate_response")) {
+            // we've actually got a response to update, let's do an update instead!  
+            $response = \App\Models\RateResponse::findOrFail($request->get("rate_response"));
+            return $this->update($request, $response);
+        }
         $response = new \App\Models\RateResponse;
         $response->fill($request->all());
         $response->user()->associate(Auth::user());
         $response->completed = false;
         $response->save();
-
         $response->competencies()->attach($request->get('competencies'));
 
         $items = array();
         
+        $type = [];
         foreach ($request->get('response_component') as $responseId => $content) {
             $item = new \App\Models\ResponseComponent;
-
+            $type[] = $responseId;
             $item->fill($content);
             $item->response_type = $responseId;
             $item->response_modality = 1;
@@ -87,7 +65,14 @@ class RateController extends Controller
             $items[] = $item;
         }
         
-        return \Redirect::route('rate.edit', $response->id);
+        if(count($type) > 1) {
+            return \Redirect::route('rate.edit', $response->id);    
+        }
+        else {
+            return \Redirect::route($type[0] .".edit", $response->id);
+        }
+
+        
     }
 
     /**
@@ -101,17 +86,6 @@ class RateController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(\App\Models\RateResponse $rate)
-    {
-        $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
-        return view('rate.reflect', compact('competencies', 'rate'));
-    }
 
     /**
      * Update the specified resource in storage.
@@ -120,23 +94,29 @@ class RateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, \App\Models\RateResponse $rate)
     {
-
-        $response = \App\Models\RateResponse::findOrFail($id);
+        $response = $rate;
         $response->fill($request->all());
         if($request->get('competencies')) {
             $response->competencies()->sync($request->get('competencies'));            
         }
 
         $response->save();
+        $types = [];
         foreach ($request->get('response_component') as $responseId => $content) {
-            
-            $item = $response->filtered_response_component($responseId);
-            if(!$item) {
+            if(isset($content["id"])) {
+                $item = $response->response_components->where('id', $content["id"])->first();
+            }
+            elseif($item = $response->filtered_response_component($responseId)) {
+
+            }
+            else {
                 $item = new \App\Models\ResponseComponent;    
             }
-            
+
+        
+            $type[] = $responseId;
             $item->fill($content);
             $item->response_type = $responseId;
             $item->response_modality = 1;
@@ -149,13 +129,75 @@ class RateController extends Controller
             }
             
         }
-        return \Redirect::route('rate.edit', $response->id);
+
+        if(count($type) > 1) {
+            return \Redirect::route('rate.edit', $response->id);    
+        }
+        else {
+            return \Redirect::route($type[0] . ".edit", [$response->id, $item->id]);
+        }
     }
 
 
     public function getDescriptorForCompetency(\App\Models\Competency $competency) {
         return $competency->descriptors;
     }
+
+
+    /**
+     * getExperiencesForCompetency function
+     *
+     *  Find experiences the student has captured for a given competency.
+     *  If an experience has already been assigned a primary competency, only return it for queries against that competency
+     *
+     *  Only return options where there's a reflect (this should always be true)
+     *  
+     * @return JSON array of experiences
+     * @author 
+     **/
+    
+    public function getExperiencesForCompetency(\App\Models\Competency $competency) {
+        $experiences = \App\Models\RateResponse::whereHas('user', function($query) {
+            $query->where('user_id', Auth::user()->id); })
+                ->where('primaryCompetency', null)
+                ->whereHas('competencies', function($query) use ($competency) {
+                    $query->where('competency_id', $competency->id);
+                    })
+                ->whereHas('response_components', function($query) use ($competency) {
+                    $query->where('response_type', "reflect");
+                    })
+                ->get();
+
+        $experiencesWithPrimaryCompetency = \App\Models\RateResponse::whereHas('user', function($query) {
+            $query->where('user_id', Auth::user()->id); })
+            ->whereHas('response_components', function($query) use ($competency) {
+                    $query->where('response_type', "reflect");
+                })
+            ->where('primaryCompetency', $competency->id)->get();
+
+        return array_merge($experiences->toArray(), $experiencesWithPrimaryCompetency->toArray());
+    }
+
+    /**
+     * getReflectionForRateResponse 
+     *
+     * Get the "reflect" response for a give rate_response
+     *
+     * @return void
+     * @author 
+     **/
+    public function getReflectionForRateResponse(\App\Models\RateResponse $rate) 
+    {
+        $reflection = $rate->filtered_response_component("reflect");
+
+        if($reflection->response_modality == 1) {
+            return view("rate.reflect-static_text", compact('reflection'));
+        }
+        else {
+            return view("rate.reflect-static_video", compact('reflection'));   
+        }
+    }
+
 
     /**
      * Remove the specified resource from storage.

@@ -39,6 +39,13 @@
 		</div>
 	
 		<div class="form-group">
+			{{ Form::label('experience', 'Experience:', ['class'=>'col-sm-2 control-label']) }}
+			<div class="col-sm-4">
+				{{ Form::text('experience', null, ['class' => 'form-control']) }}
+			</div>
+		</div>
+	
+		<div class="form-group">
 			{{ Form::label('response_component[reflect][response_text]', 'Response:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-5">
 				{{ Form::textarea('response_component[reflect][response_text]', $rate->filtered_response_component('reflect')->response_text, ['class'=>'form-control', 'cols'=>30, 'rows'=>10]) }}

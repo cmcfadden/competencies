@@ -16,7 +16,7 @@ class EvaluateController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()) {
-            $evaluations = \App\Models\Evaluation::all();
+            $evaluations = Auth::user()->evaluations;
             $evaluations->load('competency');    
             return response()->json($evaluations);
         }
@@ -79,6 +79,10 @@ class EvaluateController extends Controller
      */
     public function edit(\App\Models\Evaluation $evaluate)
     {
+        if($evaluate->user->id !== Auth::user()->id) {
+            return "BLAH";
+
+        }
         $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
         return view('evaluate.create', ['evaluation'=>$evaluate, "competencies"=>$competencies]);
     }

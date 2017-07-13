@@ -18,6 +18,7 @@ class CreateRateResponsesTable extends Migration
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('primaryCompetency')->nullable();
+            $table->integer('experience');
             $table->boolean('completed');
             $table->timestamps();
         });

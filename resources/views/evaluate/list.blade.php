@@ -31,28 +31,28 @@
 <script>
 
 $(document).ready(function() {
-	$.ajaxSetup({
-    	headers: {
-        	'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    	}
-	});
-	$("#evaluation").DataTable({
-		"ajax": {
-			"url": '/evaluate',
-			"dataSrc": ''
-		},
-		"columns": [
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $("#evaluation").DataTable({
+        "ajax": {
+            "url": '/evaluate',
+            "dataSrc": ''
+        },
+        "columns": [
             { "data": "competency.competency"},
             { "data": "level" },
             { "data": "updated_at"},
-            { 	
-            	"data": "id",
-    			"render": function (data, type, row, meta) {
-        			return '<a href="evaluate/' + row.id + '">View Response</a>';
-    			}
-    		}
+            {   
+                "data": "id",
+                "render": function (data, type, row, meta) {
+                    return '<a href="evaluate/' + row.id + '/edit">View Response</a>';
+                }
+            }
         ]
-	});
+    });
 
 });
 
