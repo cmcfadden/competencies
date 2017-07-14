@@ -12,6 +12,7 @@
 */
 
 
+
 Route::name('login')->get("login", '\StudentAffairsUwm\Shibboleth\Controllers\ShibbolethController@emulateLogin');
 
 Route::group(['middleware' => 'web'], function () {

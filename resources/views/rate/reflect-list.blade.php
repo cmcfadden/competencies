@@ -36,7 +36,7 @@ $(document).ready(function() {
     });
     $("#reflect").DataTable({
         "ajax": {
-            "url": '/rate/reflectindex',
+            "url": '/reflect/',
             "dataSrc": ''
         },
         "columns": [
@@ -53,7 +53,7 @@ $(document).ready(function() {
             {   
                 "data": "id",
                 "render": function (data, type, row, meta) {
-                    return '<a href="/rate/' + row.id + '/reflect_edit/">View Response</a>';
+                    return '<a href="/reflect/' + row.id + '/edit/">View Response</a>';
                 }
             }
         ]

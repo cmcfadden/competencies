@@ -181,7 +181,8 @@ return [
         StudentAffairsUwm\Shibboleth\ShibalikeServiceProvider::class,
         'CloudCreativity\LaravelJsonApi\ServiceProvider',
         Barryvdh\Cors\ServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class
+        Collective\Html\HtmlServiceProvider::class,
+        App\Providers\ExperienceServiceProvider::class
     ],
 
     /*
@@ -233,7 +234,7 @@ return [
         'JsonApi' => 'CloudCreativity\LaravelJsonApi\Facade',
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-
+        'Experience' => \App\Library\ExperienceFacade::class,
     ],
 
 ];

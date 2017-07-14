@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Auth;
 class ReflectController extends RateController
 {
     public function index(Request $request) {
-    	if($request->ajax()) {
+        if($request->ajax()) {
             $responses = Auth::user()->rate_responses()->whereHas('response_components', function($query) {
                     $query->where('response_type', "reflect");
                     })
@@ -24,7 +24,7 @@ class ReflectController extends RateController
         return view('rate.reflect', compact('competencies'));
     }
 
-	/**
+    /**
      * Show the form for editing the specified reflect resource.
      *
      * @param  int  $id
