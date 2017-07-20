@@ -9,7 +9,7 @@ class TranslateController extends RateController
 {
 
     public function index(Request $request) {
-        // if($request->ajax()) {
+        if($request->ajax()) {
             $responses = \App\Models\ResponseComponent::where("response_type", "translate")->whereHas("response", function($query) {
                 $query->where("user_id", Auth::user()->id);
             })->get()->load("response")->load("response.primaryCompetency");
@@ -21,9 +21,9 @@ class TranslateController extends RateController
                     })
             ->where("completed", 0)->get()->load('competencies')->load("response_components");
             return response()->json($responses);
-        // }
+        }
         
-        // return view('rate.translate-list');
+        return view('rate.translate-list');
     }
 
     /**
@@ -31,7 +31,7 @@ class TranslateController extends RateController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(\App\Models\RateAssignment $rateAssignment)
     {
         $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
         return view('rate.translate', compact('competencies'));

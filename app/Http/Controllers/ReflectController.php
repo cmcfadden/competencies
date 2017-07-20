@@ -20,7 +20,7 @@ class ReflectController extends RateController
         return view('rate.reflect-list');
     }
 
-    public function create() {
+    public function create(\App\Models\RateAssignment $rateAssignment) {
         $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
         $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
         return view('rate.reflect', compact('competencies', 'experiences'));

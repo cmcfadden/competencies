@@ -40,4 +40,8 @@ class User extends Authenticatable
     public function evaluations() {
         return $this->hasMany('App\Models\Evaluation');
     }
+
+    public function rate_assignments() {
+        return $this->hasMany('App\Models\RateAssignment');
+    }
 }

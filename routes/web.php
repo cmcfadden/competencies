@@ -41,11 +41,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::model('reflect','App\Models\RateResponse');
     Route::model('translate','App\Models\RateResponse');
     Route::model('evaluate','App\Models\Evaluation');
+    Route::model('rateassignment','App\Models\RateAssignment');
     Route::resource('rate', 'RateController');
     Route::resource('translate', 'TranslateController');
     Route::resource('reflect', 'ReflectController');
     Route::resource('evaluate', 'EvaluateController');
+    Route::resource('rateassignment', 'RateAssignmentController');
 
     Route::get("translate/{rate}/edit/{componentId}", "TranslateController@edit")->name("translate.edit");
+    Route::get("rate/create/{rateAssignment?}", "RateController@create")->name("rate.create");
 
 });

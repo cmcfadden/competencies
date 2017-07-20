@@ -26,7 +26,7 @@
 		@endisset
 		
 
-		
+		{{form::hidden("rate_assignment", isset($rateAssignment)?$rateAssignment->id:null)}}
 		<div class="form-group">
 			{{ Form::label('experience', 'Experience:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-4">

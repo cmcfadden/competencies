@@ -25,11 +25,12 @@ class RateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(\App\Models\RateAssignment $rateAssignment)
     {
         $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
         $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
-        return view('rate.classic', compact('competencies', 'experiences'));
+
+        return view('rate.classic', compact('competencies', 'experiences', 'rateAssignment'));
     }
 
     public function edit(\App\Models\RateResponse $rate) {

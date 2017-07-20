@@ -56,5 +56,14 @@ question.</p>
 
 </div>
 
+<div class="row">
+	<div class="col-sm-12">
+ <a href="{{action('RateAssignmentController@index')}}">RATE Assignment</a></div>
+
+	</div>
+
+
+</div>
+
 
 @endsection
