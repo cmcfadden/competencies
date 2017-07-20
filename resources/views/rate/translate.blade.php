@@ -35,9 +35,9 @@
 		
 		
 		<div class="form-group hide rate_responses-select">
-			{{ Form::label('experience', 'Experience:', ['class'=>'col-sm-2 control-label']) }}
+			{{ Form::label('rate_response', 'Experience:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-4">
-				{{ Form::select('experience',array(), null, ['id'=>'rate_responses', 'class' => 'form-control']) }}
+				{{ Form::select('rate_response',array(), null, ['id'=>'rate_responses', 'class' => 'form-control']) }}
 			</div>
 		</div>
 
@@ -51,8 +51,6 @@
 		<div class="form-group reflectContent">
 
 		</div>
-
-		{{ Form::text('rate_response', $rate->id) }}
 
 		<div class="form-group hide">
 			{{ Form::label('response_component[translate][response_text]', 'Response:', ['class'=>'col-sm-2 control-label']) }}
@@ -110,7 +108,7 @@
 			$("#rate_responses").find('option').remove();
 			$("#rate_responses").append("<option>Select a Experience<option");
 			$.each(data, function(index, val) {
-				$("#rate_responses").append($('<option>', {value:val.id, text:val.experience}));
+				$("#rate_responses").append($('<option>', {value:val.id, text:val.experience_name}));
 				$(".rate_responses-select").removeClass("hide");
 				$(".no-rate_responses").addClass("hide");
 			});

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use Experience;
 
 class RateController extends Controller
 {
@@ -26,9 +27,16 @@ class RateController extends Controller
      */
     public function create()
     {
-        dd("not yet");
+        $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
+        $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
+        return view('rate.classic', compact('competencies', 'experiences'));
     }
 
+    public function edit(\App\Models\RateResponse $rate) {
+        $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
+        $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
+        return view('rate.classic', compact('rate', 'competencies', 'experiences'));
+    }
 
 
     /**
@@ -39,6 +47,7 @@ class RateController extends Controller
      */
     public function store(Request $request)
     {
+
         if($request->get("rate_response")) {
             // we've actually got a response to update, let's do an update instead!  
             $response = \App\Models\RateResponse::findOrFail($request->get("rate_response"));
@@ -52,7 +61,6 @@ class RateController extends Controller
         $response->competencies()->attach($request->get('competencies'));
 
         $items = array();
-        
         $type = [];
         foreach ($request->get('response_component') as $responseId => $content) {
             $item = new \App\Models\ResponseComponent;
@@ -174,8 +182,15 @@ class RateController extends Controller
                     $query->where('response_type', "reflect");
                 })
             ->where('primaryCompetency', $competency->id)->get();
-
-        return array_merge($experiences->toArray(), $experiencesWithPrimaryCompetency->toArray());
+        $mergedArrays = array_merge($experiences->toArray(), $experiencesWithPrimaryCompetency->toArray());
+        // we do this to avoid a merge
+        $userExperiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id")->toArray();
+        foreach($mergedArrays as $key=>$experience) {
+            if(array_key_exists($experience["experience"], $userExperiences)) {
+                $mergedArrays[$key]["experience_name"] = $userExperiences[$experience["experience"]];
+            }
+        }
+        return $mergedArrays;
     }
 
     /**

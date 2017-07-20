@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Experience;
+
 class RateResponse extends Model
 {
     protected $guarded = ['id'];
@@ -51,4 +53,12 @@ class RateResponse extends Model
     {
         return $this->belongsToMany('App\Models\Competency')->withTimestamps();
     }
+
+    public function descriptive_experience() {
+
+        $experienceId = $this->experience;
+        $experience = experience::getDescriptorForExperience($experienceId);
+
+    }
+
 }

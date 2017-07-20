@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use Experience;
+
 class ReflectController extends RateController
 {
     public function index(Request $request) {
@@ -20,8 +22,8 @@ class ReflectController extends RateController
 
     public function create() {
         $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
-        // $rate = new \App\Models\RateResponse;
-        return view('rate.reflect', compact('competencies'));
+        $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
+        return view('rate.reflect', compact('competencies', 'experiences'));
     }
 
     /**
@@ -33,7 +35,8 @@ class ReflectController extends RateController
     public function edit(\App\Models\RateResponse $rate)
     {
         $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
-        return view('rate.reflect', compact('competencies', 'rate'));
+        $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
+        return view('rate.reflect', compact('competencies', 'rate', 'experiences'));
     }
 
 }

@@ -47,5 +47,14 @@ question.</p>
 </div>
 
 
+<div class="row">
+	<div class="col-sm-12">
+		Part of a class?  Complete the full <a href="{{action('RateController@create')}}">RATE process</a></div>
+
+	</div>
+
+
+</div>
+
 
 @endsection

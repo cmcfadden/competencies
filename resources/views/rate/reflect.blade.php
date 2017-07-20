@@ -41,7 +41,7 @@
 		<div class="form-group">
 			{{ Form::label('experience', 'Experience:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-4">
-				{{ Form::text('experience', null, ['class' => 'form-control']) }}
+			{{ Form::select('experience', $experiences, null, ['id'=>'experience', 'class' => 'form-control']) }}
 			</div>
 		</div>
 	
