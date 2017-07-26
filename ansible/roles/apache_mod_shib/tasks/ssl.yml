@@ -1,0 +1,43 @@
+---
+- name: copy shibboleth cert file
+  become: "{{ ansible_distribution_major_version == '7' }}"
+  copy:
+    src: "{{ apache_mod_shib_ssl_certificate_store }}/{{ apache_mod_shib_ssl_certificate_file }}"
+    dest: "{{ apache_mod_shib_dir }}"
+    owner: "{{ apache_mod_shib_user }}"
+    group: "{{ apache_mod_shib_group }}"
+    mode: "{{ apache_mod_shib_config_file_mode }}"
+  notify:
+    - restart shibboleth
+    - restart shibboleth rhel 6
+
+- name: copy shibboleth key file
+  become: "{{ ansible_distribution_major_version == '7' }}"
+  copy:
+    src: "{{ apache_mod_shib_ssl_certificate_store }}/{{ apache_mod_shib_ssl_key_file }}"
+    dest: "{{ apache_mod_shib_dir }}"
+    owner: "{{ apache_mod_shib_user }}"
+    group: "{{ apache_mod_shib_group }}"
+    mode: "{{ apache_mod_shib_key_file_mode }}"
+
+- name: Decrypt the shibboleth key
+  become: "{{ ansible_distribution_major_version == '7' }}"
+  command: openssl aes-256-cbc -salt -a -d -in {{ apache_mod_shib_dir }}/{{ apache_mod_shib_ssl_key_file }}
+           -out {{ apache_mod_shib_dir }}/decrypted.key -k {{ apache_mod_shib_ssl_key_password }}
+           creates={{ apache_mod_shib_dir }}/decrypted.key
+
+- name: Rename the decrypted shibboleth key
+  become: "{{ ansible_distribution_major_version == '7' }}"
+  command: mv {{ apache_mod_shib_dir }}/decrypted.key {{ apache_mod_shib_dir }}/sp-key.pem
+           removes={{ apache_mod_shib_dir }}/decrypted.key
+  notify:
+    - restart shibboleth
+    - restart shibboleth rhel 6
+
+- name: set perms of shibboleth key file
+  become: "{{ ansible_distribution_major_version == '7' }}"
+  file:
+    path: "{{ apache_mod_shib_dir }}/{{ apache_mod_shib_ssl_key_file }}"
+    owner: "{{ apache_mod_shib_user }}"
+    group: "{{ apache_mod_shib_group }}"
+    mode: "{{ apache_mod_shib_key_file_mode }}"

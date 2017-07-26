@@ -1,0 +1,12 @@
+---
+apache_mod_php_version: "5.6"
+apache_enable_ssl: false
+ipset_rule_names:
+  - http_allowed
+apache_mod_shib_entity_id: "https://www.example.com/shibboleth/default"
+apache_mod_shib_admin_email: "example@example.com"
+apache_mod_shib_lazy_auth: true
+apache_vhosts:
+- server_name: "{{ hostname }}"
+  use_ssl: false
+  document_root: "/swadm/var/www/html/public"

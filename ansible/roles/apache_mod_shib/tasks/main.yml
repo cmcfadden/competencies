@@ -1,0 +1,64 @@
+---
+- name: initialize shibboleth
+  command: rsync -a --exclude sp-key.pem /etc/shibboleth {{ apache_mod_shib_etc }} creates={{ apache_mod_shib_dir }}
+  tags:
+    - apache_mod_shib
+
+- include: ssl.yml
+  tags:
+    - apache_mod_shib
+
+- name: copy in shib.conf file
+  become: "{{ ansible_distribution_major_version == '7' }}"
+  template:
+    src: "shib-{{ apache_mod_shib_apache_version }}.conf.j2"
+    dest: "{{ apache_mod_shib_conf_file }}"
+    owner: "{{ apache_mod_shib_config_owner }}"
+    group: "{{ apache_mod_shib_group }}"
+    mode: "{{ apache_mod_shib_config_file_mode }}"
+  notify: restart apache
+  tags:
+    - apache_mod_shib
+
+- name: copy in shibboleth2.xml file
+  become: "{{ ansible_distribution_major_version == '7' }}"
+  template:
+    src: shibboleth2.xml.j2
+    dest: "{{ apache_mod_shib_xml_file }}"
+    owner: "{{ apache_mod_shib_config_owner }}"
+    group: "{{ apache_mod_shib_group }}"
+    mode: "{{ apache_mod_shib_config_file_mode }}"
+  notify:
+    - restart shibboleth
+    - restart shibboleth rhel 6
+  tags:
+    - apache_mod_shib
+
+- name: copy in shibd file
+  become: "{{ ansible_distribution_major_version == '7' }}"
+  template:
+    src: shibd.j2
+    dest: "{{ apache_mod_shib_shibd_file }}"
+    owner: "{{ apache_mod_shib_config_owner }}"
+    group: "{{ apache_mod_shib_group }}"
+    mode: "{{ apache_mod_shib_config_file_mode }}"
+  when: ansible_distribution_major_version == '7'
+  notify:
+    - restart shibboleth
+    - restart shibboleth rhel 6
+  tags:
+    - apache_mod_shib
+
+- name: check to see if shibboleth is enabled at boot
+  shell: "/sbin/chkconfig --list shibd | grep -q 3:on"
+  register: shib_enabled
+  changed_when: false
+  failed_when: false
+  tags:
+    -  apache_mod_shib
+
+- name: ensure shibboleth is enabled at boot
+  command: sudo /sbin/chkconfig shibd on
+  when: shib_enabled.rc != 0
+  tags:
+    - apache_mod_shib

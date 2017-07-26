@@ -1,0 +1,49 @@
+---
+apache_mod_shib_etc: "{{ env_etc }}"
+apache_mod_shib_conf_file: "{{ apache_confd_dir }}/0shib.conf"
+apache_mod_shib_dir: "{{ apache_mod_shib_etc }}/shibboleth"
+apache_mod_shib_xml_file: "{{ apache_mod_shib_dir }}/shibboleth2.xml"
+
+apache_mod_shib_protect_location: "/"
+
+apache_mod_shib_config_file_mode: "{{ env_file_mode }}"
+apache_mod_shib_key_file_mode: "0600"
+
+shibd_user: "shibd"
+apache_mod_shib_user: "{{ env_user if ansible_distribution_major_version == '6' else shibd_user }}"
+apache_mod_shib_root_user: "root"
+apache_mod_shib_root_group: "root"
+
+apache_mod_shib_config_owner: "{{ env_user if ansible_distribution_major_version == '6' else apache_mod_shib_root_user }}"
+apache_mod_shib_group: "{{ env_group if ansible_distribution_major_version == '6' else apache_mod_shib_root_group }}"
+
+apache_mod_shib_ssl_certificate_store: "ssl"
+apache_mod_shib_ssl_certificate_file: "sp-cert.pem"
+apache_mod_shib_ssl_key_file: "sp-key.pem"
+
+apache_mod_shib_entity_id: null
+apache_mod_shib_admin_email: "root@localhost"
+apache_mod_shib_ssl_key_password: null
+
+apache_mod_shib_sso_production_entity_id: "https://idp2.shib.umn.edu/idp/shibboleth"
+apache_mod_shib_sso_test_entity_id: "https://idp-test.shib.umn.edu/idp/shibboleth"
+apache_mod_shib_sso_entity_id: "{{ apache_mod_shib_sso_production_entity_id }}"
+
+apache_mod_shib_apache_version: "{{ apache_version }}"
+
+apache_mod_shib_production_metadata_provider: "https://login.umn.edu/metadata.xml"
+apache_mod_shib_test_metadata_provider: "https://login-test.umn.edu/metadata.xml"
+
+apache_mod_shib_use_cors: false
+apache_mod_shib_cors: "conf:ignoreNoPassive=\"true\" outgoingBindings=\"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST\""
+
+apache_mod_shib_shibd_file: "/etc/sysconfig/shibd"
+apache_mod_shib_ld_library_path: "/opt/shibboleth/lib64"
+
+apache_mod_shib_lazy_auth: false
+
+apache_mod_shib_lazy_auth_require_statement: "Require shibboleth"
+apache_mod_shib_standard_require_statement: |
+  ShibRequestSetting requireSession 1
+  Require shib-session
+apache_mod_shib_require_statement: "{{ apache_mod_shib_lazy_auth_require_statement if apache_mod_shib_lazy_auth else apache_mod_shib_standard_require_statement }}"

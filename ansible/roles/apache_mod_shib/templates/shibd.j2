@@ -1,0 +1,10 @@
+# Shibboleth SP init script customization
+
+# User account for shibd
+SHIBD_USER={{ apache_mod_shib_user }}
+
+export SHIBSP_CONFIG={{ apache_mod_shib_xml_file }}
+export SHIBSP_CFGDIR={{ apache_mod_shib_etc }}
+
+# Override OS-supplied libcurl
+export LD_LIBRARY_PATH={{ apache_mod_shib_ld_library_path }}
