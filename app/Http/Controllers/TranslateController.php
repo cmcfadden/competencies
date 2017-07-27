@@ -9,17 +9,28 @@ class TranslateController extends RateController
 {
 
     public function index(Request $request) {
+
         if($request->ajax()) {
-            $responses = \App\Models\ResponseComponent::where("response_type", "translate")->whereHas("response", function($query) {
-                $query->where("user_id", Auth::user()->id);
-            })->get()->load("response")->load("response.primaryCompetency");
-
-
-            dd($responses->toArray());
-            $responses = Auth::user()->rate_responses()->whereHas('response_components', function($query) {
+        
+            $responses = Auth::user()->rate_responses()->where("classic_rate",false)->whereHas('response_components', function($query) {
                     $query->where('response_type', "translate");
                     })
-            ->where("completed", 0)->get()->load('competencies')->load("response_components");
+            ->get()->load("response_components")->load("primary_competency");
+
+
+            $outputArray = array();
+            foreach($responses as $response) {
+                foreach($response->response_components as $responseComponent) {
+                    if($responseComponent->response_type == "translate") {
+                        $response->translateComponentId = $responseComponent->id;
+                        $outputArray[] = $response;
+                    }
+
+                }
+
+
+            }
+
             return response()->json($responses);
         }
         

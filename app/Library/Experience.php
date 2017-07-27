@@ -45,5 +45,35 @@ class Experience
     }
 
 
+    public function getTypesOfCoCurriculars() {
+    	$types = DB::connection('mysql2')
+			->table("co_curricular_types")
+			->get();
+		return $types;
+    }
+
+    public function createCocurricular($cocurricularType, $cocurricularDescriptor, $userId) {
+
+    	$coCurricularId = DB::connection('mysql2')
+			->table("co_curriculars")
+			->insertGetId(["cc_name"=>$cocurricularDescriptor, "update_emplid" =>$userId, "update_date"=>\Carbon\Carbon::now()]);
+
+		DB::connection('mysql2')
+			->table("co_curricular_type_assoc")
+			->insert(["cc_id"=>$coCurricularId, "cc_type_id" =>$cocurricularType, "create_emplid"=>$userId, "create_date"=>\Carbon\Carbon::now()]);
+
+		$elementId = DB::connection('mysql2')
+			->table("elements")
+			->insertGetId(["elem_name"=>$cocurricularDescriptor, "src_id" =>$coCurricularId, "src_db"=>"", "src_tbl"=>"co_curriculars", "src_type"=>"cc", "create_date"=>\Carbon\Carbon::now(), "create_emplid"=>$userId]);
+
+		DB::connection('mysql2')
+			->table("portfolio")
+			->insert(["stud_emplid"=>$userId, "path_id" =>0, "elem_id"=>$elementId, "update_emplid"=>$userId, "update_date"=>\Carbon\Carbon::now()]);
+
+		return $elementId;
+
+
+    }
+
 
 }

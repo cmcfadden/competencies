@@ -26,25 +26,29 @@
 	@endisset
 		
 		<!--<div class="form-group">
-			{{ Form::label('primaryCompetency', 'Competency:', ['class'=>'col-sm-2 control-label']) }}
+			{{ Form::label('primary_competency_id', 'Competency:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-4">
-				{{ Form::select('primaryCompetency', $competencies, null, ['class' => 'form-control']) }}
+				{{ Form::select('primary_competency_id', $competencies, null, ['class' => 'form-control']) }}
 			</div>
 		</div>-->
+
+
+		@isset($rate->experience)
+		<h2>Reflecting on {{ $selectedExperience->elem_name}}</h2>
+
+		@else
+		@include('rate.experienceselector')
+		@endif
+
 		<div class="form-group">
 			{{ Form::label('competencies[]', 'Competencies:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-4">
 				{{ Form::select('competencies[]', $competencies, null, ['multiple'=>'multiple', 'class' => 'form-control']) }}
 			</div>
 		</div>
-	
-		<div class="form-group">
-			{{ Form::label('experience', 'Experience:', ['class'=>'col-sm-2 control-label']) }}
-			<div class="col-sm-4">
-			{{ Form::select('experience', $experiences, null, ['id'=>'experience', 'class' => 'form-control']) }}
-			</div>
-		</div>
-	
+
+
+
 		<div class="form-group">
 			{{ Form::label('response_component[reflect][response_text]', 'Response:', ['class'=>'col-sm-2 control-label']) }}
 			<div class="col-sm-5">
@@ -61,6 +65,15 @@
 	{{ Form::close() }}
 	</div>
 </div>
+
+
+@endsection
+
+
+@section('footer')
+
+<script src="{{ asset('/js/experienceManager.js') }}"></script>
+
 
 
 @endsection

@@ -9,7 +9,7 @@ use Experience;
 class RateResponse extends Model
 {
     protected $guarded = ['id'];
-    protected $fillable = ['primaryCompetency', 'experience', 'rate_assignment'];
+    protected $fillable = ['primary_competency_id', 'experience', 'rate_assignment', 'classic_rate'];
     
     public function user() {
         return $this->belongsTo("App\User", "user_id");
@@ -45,7 +45,7 @@ class RateResponse extends Model
         return $filtered; 
     }
 
-    public function primaryCompetency()
+    public function primary_competency()
     {
         return $this->belongsTo('App\Models\Competency');
     }

@@ -10,7 +10,7 @@ class ReflectController extends RateController
 {
     public function index(Request $request) {
         if($request->ajax()) {
-            $responses = Auth::user()->rate_responses()->whereHas('response_components', function($query) {
+            $responses = Auth::user()->rate_responses()->where("classic_rate",false)->whereHas('response_components', function($query) {
                     $query->where('response_type', "reflect");
                     })
             ->where("completed", 0)->get()->load('competencies');
@@ -22,8 +22,12 @@ class ReflectController extends RateController
 
     public function create(\App\Models\RateAssignment $rateAssignment) {
         $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
-        $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
-        return view('rate.reflect', compact('competencies', 'experiences'));
+        $courseExperiences = experience::getExperiencesForUser(Auth::user()->id)->where("src_type", "crs")->pluck("elem_name", "elem_id");
+        $cocurricularExperiences = experience::getExperiencesForUser(Auth::user()->id)->where("src_type", "cc")->pluck("elem_name", "elem_id");
+
+        $typesOfCocurriculars = experience::getTypesOfCoCurriculars()->pluck("cc_type_name", "cc_type_id")->toArray();
+
+        return view('rate.reflect', compact('competencies', 'courseExperiences', 'cocurricularExperiences', 'typesOfCocurriculars'));
     }
 
     /**
@@ -35,8 +39,14 @@ class ReflectController extends RateController
     public function edit(\App\Models\RateResponse $rate)
     {
         $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
-        $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
-        return view('rate.reflect', compact('competencies', 'rate', 'experiences'));
+        $courseExperiences = experience::getExperiencesForUser(Auth::user()->id)->where("src_type", "crs")->pluck("elem_name", "elem_id");
+        $cocurricularExperiences = experience::getExperiencesForUser(Auth::user()->id)->where("src_type", "cc")->pluck("elem_name", "elem_id");
+        $typesOfCocurriculars = experience::getTypesOfCoCurriculars()->pluck("cc_type_name", "cc_type_id")->toArray();
+
+
+        $selectedExperience = experience::getExperiencesForUser(Auth::user()->id)->where("elem_id", $rate->experience)->first();
+
+        return view('rate.reflect', compact('rate', 'competencies', 'courseExperiences', 'cocurricularExperiences', 'typesOfCocurriculars', 'selectedExperience'));
     }
 
 }

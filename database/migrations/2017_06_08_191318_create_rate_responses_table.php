@@ -17,9 +17,11 @@ class CreateRateResponsesTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('primaryCompetency')->nullable();
+            $table->integer('primary_competency_id')->unsigned()->nullable();
+            $table->foreign('primary_competency_id')->references('id')->on('competencies');
             $table->integer('experience');
             $table->boolean('completed');
+            $table->boolean('classic_rate')->default(false);
             $table->timestamps();
         });
 

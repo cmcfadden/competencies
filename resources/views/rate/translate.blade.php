@@ -31,7 +31,7 @@
 				{{ Form::select('available_competencies', $competencies, null, ['id'=>'available_competencies', 'class' => 'form-control']) }}
 			</div>
 		</div>
-		{{ Form::text('primaryCompetency') }}
+		{{ Form::text('primary_competency_id') }}
 		
 		
 		<div class="form-group hide rate_responses-select">
@@ -40,6 +40,8 @@
 				{{ Form::select('rate_response',array(), null, ['id'=>'rate_responses', 'class' => 'form-control']) }}
 			</div>
 		</div>
+
+		{{ Form::text("response_id", $rate->filtered_response_component('translate')->response_id, ["id"=>"response_id"])}}
 
 		<div class="form-group hide no-rate_responses">
 			<label class="col-sm-2 control-label">Experience: </label>
@@ -94,10 +96,27 @@
 
 <script>
 
+	$("document").ready(function() {
+
+		// if we're loading a saved item, setup the dropdowns
+		if($("[name=primary_competency_id]").val()) {
+			$("#available_competencies").val($("[name=primary_competency_id]").val());
+			$("#available_competencies").trigger("change");
+			$("#available_competencies").prop("disabled", true);
+
+		}
+		else {
+			$("#available_competencies").trigger("change");
+		}
+
+	});
+
+	// when the user selects a competency, find the recorded responses for that competnecy.
+	// 
 	$("#available_competencies").on("change", function(evt) {
 		targetField = evt.target;
 		competencyId = $(targetField).val();
-		$("[name=primaryCompetency]").val(competencyId);
+		$("[name=primary_competency_id]").val(competencyId);
 		$.get('/rate/getExperiencesForCompetency/' + competencyId, function(data) {
 			if(data.length == 0) {
 				$(".no-rate_responses .error-dialog").html("You don't have any captured experiences for this competency");
@@ -106,14 +125,24 @@
 				return;
 			}
 			$("#rate_responses").find('option').remove();
-			$("#rate_responses").append("<option>Select a Experience<option");
+			$("#rate_responses").append("<option>Select an Experience<option");
 			$.each(data, function(index, val) {
 				$("#rate_responses").append($('<option>', {value:val.id, text:val.experience_name}));
 				$(".rate_responses-select").removeClass("hide");
 				$(".no-rate_responses").addClass("hide");
+				if($("#response_id").val()) {
+					$("#rate_responses").val($("#response_id").val());
+					$("#rate_responses").trigger("change");
+					$("#rate_responses").prop("disabled",true);
+				}
 			});
 		});
 	});
+
+
+	// when the user selected one of their recorded reflections, load that reflection and the available
+	// descriptors for the current competnecy
+	// 
 	var descriptors = null;
 	$("#rate_responses").on("change", function(evt) {
 		targetField = $(evt.target);
@@ -129,11 +158,12 @@
 	});
 
 	var loadDescriptors = function() {
-		$.get('/rate/getDescriptorForCompetency/' + $("[name=primaryCompetency]").val(), function(data) {
+		$.get('/rate/getDescriptorForCompetency/' + $("[name=primary_competency_id]").val(), function(data) {
 			descriptors = data;
 			if($.isNumeric($("#descriptor_id").val())) {
 				$(descriptors).each(function(index, el) {
 					if(el.id == $("#descriptor_id").val()) {
+
 						$(".descriptor .question").html(el.descriptor_as_question);
 					}
 				});
@@ -170,19 +200,15 @@
 	};
 
 
-	$(document).ready(function() {
-		if($.isNumeric($("#descriptor_id").val())) {
-			// $(".descriptor .question").html("NEED TO FILL THIS IN BOYEE");
-			$(".descriptor").removeClass("hide");
-			$(".translate").removeClass("hide");
-			loadDescriptors();
-			getReflection();
-		}
-		
-		
-
-
-	});
+	// $(document).ready(function() {
+	// 	if($.isNumeric($("#descriptor_id").val())) {
+	// 		// $(".descriptor .question").html("NEED TO FILL THIS IN BOYEE");
+	// 		$(".descriptor").removeClass("hide");
+	// 		$(".translate").removeClass("hide");
+	// 		loadDescriptors();
+	// 		getReflection();
+	// 	}
+	// });
 
 </script>
 

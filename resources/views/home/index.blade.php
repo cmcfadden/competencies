@@ -2,9 +2,9 @@
 
 
 @section('content')
-@if ($flashContent)
+@if (session('feedback'))
 <div class="alert">
-    {!! $flashContent !!}
+    {!! (session('feedback')) !!}
 </div>    
 @endif
 

@@ -11,10 +11,9 @@ class HomeController extends Controller
 
 	public function index(Request $request)
     {
-    	$flashContent = "HEY";
     	// dd(experience::getExperiencesForUser(1));
     	// dd(experience::getDescriptorForExperience(1));
-        return view('home.index', compact("flashContent"));
+        return view('home.index');
         
     }
 }

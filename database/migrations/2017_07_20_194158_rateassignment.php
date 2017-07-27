@@ -38,8 +38,8 @@ class Rateassignment extends Migration
     {
         Schema::dropIfExists('rate_assignments');
         Schema::table('rate_responses', function (Blueprint $table) {
-            $table->dropForeign("rate_responses_id_foreign");
-            $table->dropColumn("rate_assigment");
+            $table->dropForeign("rate_responses_rate_assignment_foreign");
+            $table->dropColumn("rate_assignment");
         });
     }
 }

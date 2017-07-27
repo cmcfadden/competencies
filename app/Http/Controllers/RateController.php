@@ -28,17 +28,30 @@ class RateController extends Controller
     public function create(\App\Models\RateAssignment $rateAssignment)
     {
         $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
-        $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
+        $courseExperiences = experience::getExperiencesForUser(Auth::user()->id)->where("src_type", "crs")->pluck("elem_name", "elem_id");
+        $cocurricularExperiences = experience::getExperiencesForUser(Auth::user()->id)->where("src_type", "cc")->pluck("elem_name", "elem_id");
 
-        return view('rate.classic', compact('competencies', 'experiences', 'rateAssignment'));
+        $typesOfCocurriculars = experience::getTypesOfCoCurriculars()->pluck("cc_type_name", "cc_type_id")->toArray();
+
+        return view('rate.startclassic', compact('competencies', 'experiences', 'rateAssignment', 'courseExperiences', 'cocurricularExperiences', 'typesOfCocurriculars'));
     }
 
     public function edit(\App\Models\RateResponse $rate) {
-        $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
         $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
-        return view('rate.classic', compact('rate', 'competencies', 'experiences'));
+
+
+        $selectedExperience = experience::getExperiencesForUser(Auth::user()->id)->where("elem_id", $rate->experience)->first();
+
+        return view('rate.classic', compact('rate','selectedExperience'));
     }
 
+    public function view(\App\Models\RateResponse $rate, $authCode)
+    {
+        $competencies = \App\Models\Competency::all()->pluck('competency', 'id');
+        $experiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id");
+        echo "HEY";
+        // return view('rate.classic', compact('competencies', 'experiences', 'rateAssignment'));
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -63,18 +76,21 @@ class RateController extends Controller
 
         $items = array();
         $type = [];
-        foreach ($request->get('response_component') as $responseId => $content) {
-            $item = new \App\Models\ResponseComponent;
-            $type[] = $responseId;
-            $item->fill($content);
-            $item->response_type = $responseId;
-            $item->response_modality = 1;
-            $item->video_id = 1;
-            $response->response_components()->save($item);
-            $items[] = $item;
+        if($request->get('response_component')) {
+            foreach ($request->get('response_component') as $responseId => $content) {
+                $item = new \App\Models\ResponseComponent;
+                $type[] = $responseId;
+                $item->fill($content);
+                $item->response_type = $responseId;
+                $item->response_modality = 1;
+                $item->video_id = 1;
+                $response->response_components()->save($item);
+                $items[] = $item;
+            }
         }
         
-        if(count($type) > 1) {
+        
+        if(count($type) > 1 || count($type) == 0) {
             return \Redirect::route('rate.edit', $response->id);    
         }
         else {
@@ -111,6 +127,10 @@ class RateController extends Controller
             $response->competencies()->sync($request->get('competencies'));            
         }
 
+        if($request->get("submit")) {
+            $response->completed = true;
+        }
+
         $response->save();
         $types = [];
         foreach ($request->get('response_component') as $responseId => $content) {
@@ -139,12 +159,20 @@ class RateController extends Controller
             
         }
 
-        if(count($type) > 1) {
-            return \Redirect::route('rate.edit', $response->id);    
+        if($response->completed && count($type > 1)) {
+            // todo show evaluation response
+            return redirect("/")->with('feedback', 'THIS ISN:T RIGHT');
         }
         else {
-            return \Redirect::route($type[0] . ".edit", [$response->id, $item->id]);
+            return redirect("/")->with('feedback', 'AWESOME WORK THIS SHOULD BE RANDOM');
         }
+
+        // if(count($type) > 1) {
+        //     return \Redirect::route('rate.edit', $response->id);    
+        // }
+        // else {
+        //     return \Redirect::route($type[0] . ".edit", [$response->id, $item->id]);
+        // }
     }
 
 
@@ -168,7 +196,7 @@ class RateController extends Controller
     public function getExperiencesForCompetency(\App\Models\Competency $competency) {
         $experiences = \App\Models\RateResponse::whereHas('user', function($query) {
             $query->where('user_id', Auth::user()->id); })
-                ->where('primaryCompetency', null)
+                ->where('primary_competency_id', null)
                 ->whereHas('competencies', function($query) use ($competency) {
                     $query->where('competency_id', $competency->id);
                     })
@@ -182,7 +210,7 @@ class RateController extends Controller
             ->whereHas('response_components', function($query) use ($competency) {
                     $query->where('response_type', "reflect");
                 })
-            ->where('primaryCompetency', $competency->id)->get();
+            ->where('primary_competency_id', $competency->id)->get();
         $mergedArrays = array_merge($experiences->toArray(), $experiencesWithPrimaryCompetency->toArray());
         // we do this to avoid a merge
         $userExperiences = experience::getExperiencesForUser(Auth::user()->id)->pluck("elem_name", "elem_id")->toArray();
@@ -213,6 +241,13 @@ class RateController extends Controller
             return view("rate.reflect-static_video", compact('reflection'));   
         }
     }
+
+    public function createCocurricular(Request $request) {
+        $cocurricularId = experience::createCocurricular($request->get("cocurricularType"), $request->get("cocurricularDescriptor"), Auth::user()->id);
+        return response()->json(["cocurricularId"=>$cocurricularId]);
+
+    }
+
 
 
     /**
